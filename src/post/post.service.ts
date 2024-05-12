@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { Post } from './entities/post.entity';
 import { Comment } from './entities/comment.entity';
+import { NotFoundError } from 'src/error';
 
 @Injectable()
 export class PostService {
@@ -19,6 +20,9 @@ export class PostService {
       return response.data;
     } catch (error) {
       console.error(error);
+      if (error.response.status === 404) {
+        throw new NotFoundError(`Post with ID ${id} not found.`);
+      }
       throw error;
     }
   }
